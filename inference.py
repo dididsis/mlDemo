@@ -52,10 +52,10 @@ model_weights_path = "best_model.pth"
 
 device= torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-state_dict = torch.load(model_weights_path)
+state_dict = torch.load(model_weights_path, map_location=device)
 model = SwinUnet(config, img_size=224, num_classes=num_classes)
 model.load_state_dict(state_dict=state_dict)
-model = model.to(device)
+model.to(device)
 model.eval()
 
 transform=transforms.Compose([
