@@ -256,7 +256,8 @@ def main():
 
     if st.session_state['authentication_status']:
         st.sidebar.title(f"こんにちは、{st.session_state['name']}さん")
-        #st.session_state['page']='mypage'
+        if "page" not in st.session_state:
+            st.session_state['page']='inspect'
         with st.sidebar:
             #if st.button("My Page"):
              #   st.session_state['page']='mypage'
