@@ -51,12 +51,12 @@ num_classes = 2
 model = SwinUnet(config, img_size=224, num_classes=num_classes).cuda()
 model_weights_path = "best_model.pth"
 
+device= torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 state_dict = torch.load(model_weights_path)
 model.load_state_dict(state_dict=state_dict)
-model.eval()
-
-device= torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
+model.eval()
 
 transform=transforms.Compose([
     transforms.Resize((224,224)),
@@ -66,8 +66,7 @@ transform=transforms.Compose([
 def pred(image):
     input_tensor = transform(image).unsqueeze(0)
 
-    if device.type  == 'cuda': 
-        input_tensor = input_tensor.to(device)
+    input_tensor = input_tensor.to(device)
 
     with torch.no_grad():
         outputs= model(input_tensor)
