@@ -1,0 +1,12 @@
+cookie:
+  expiry_days: 30
+  key: some_signature_key
+  name: some_cookie_name
+credentials:
+  usernames:
+    asd:
+      name: asd
+      password: $2b$12$taJRgrtURIgWnxc/inNxMOkR8YRXE0sGABgdkc8ZAE/5XqZSD1mSW
+      email: ads
+preauthorized:
+  emails: null
