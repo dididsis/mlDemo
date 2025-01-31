@@ -9,6 +9,7 @@ import io
 import os
 import datetime
 
+import fpdf
 from fpdf import FPDF
 
 import yaml
@@ -262,7 +263,7 @@ def main_app():
                 date=st.text_input("日時")
             with colr:
                 location=st.text_input("場所")
-            st.write(dir(FPDF))
+            st.write(fpdf.__version__)
             colsave, coldown = st.columns(2)
             with colsave:
                 if st.button("保存"):
