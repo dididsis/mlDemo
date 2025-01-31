@@ -37,7 +37,7 @@ def load_config():
         config = yaml.load(file, Loader=SafeLoader)
     return config
 
-def create_pdf(n, d, l, f1, f2):
+def create_pdf(id, n, d, l):
     pdf = FPDF()
     pdf.add_font("GenShin", "", "GenShinGothic-Medium.ttf", uni=True)
     pdf.add_page()
@@ -47,18 +47,12 @@ def create_pdf(n, d, l, f1, f2):
     pdf.cell(200, 10, txt=f"日時：{d}", ln=True, align='C')
     pdf.cell(200, 10, txt=f"場所：{l}", ln=True, align='C')
     current_y = pdf.get_y() + 5
-    #pdf.image_stream(st.session_state['stitched_img'], x=10, y=current_y, w = 80, type="PNG")
-    #pdf.image_stream(st.session_state["pred"], x=110, y=current_y, w=80, type="PNG")
+    pdf.image("image/stitched/"+str(id)+"_"+str(d)+"/stitched.png", x=10, y=current_y, w = 80)
+    pdf.image("image/result/"+str(id)+"_"+str(d)+"/inference_result.png", x=110, y=current_y, w=80)
 
     current_y=pdf.get_y() + 10
-    with io.BytesIO() as buf:
-        f1.savefig(buf, format="PNG")
-        hist_data=buf.getvalue()
-    pdf.image_stream(hist_data, x=10, y=current_y, w=80, type="PNG")
-    with io.BytesIO() as buf:
-        f2.savefig(buf, format="PNG")
-        heatmap_data = buf.getvalue()
-    pdf.image_stream(heatmap_data, x = 110, y=current_y, w=80, type="PNG")
+    #pdf.image_stream(hist_data, x=10, y=current_y, w=80)
+    #pdf.image_stream(heatmap_data, x = 110, y=current_y, w=80)
     
     pdf_buffer = io.BytesIO()
     pdf.output(pdf_buffer, 'F')
@@ -269,7 +263,7 @@ def main_app():
                 if st.button("保存"):
                     save(name,date,location)
             with coldown:
-                pdf_data = create_pdf(name, date, location, fig, figg)
+                pdf_data = create_pdf(st.session_state['username'], name, date, location)
                 st.download_button(
                     label="Download",
                     data=pdf_data,
