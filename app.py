@@ -46,18 +46,18 @@ def create_pdf(n, d, l, f1, f2):
     pdf.cell(200, 10, txt=f"日時：{d}", ln=True, align='C')
     pdf.cell(200, 10, txt=f"場所：{l}", ln=True, align='C')
     current_y = pdf.get_y() + 5
-    pdf.image_stream(st.session_state['stitched_img'], x=10, y=current_y, w = 80)
-    pdf.image_stream(st.session_state["pred"], x=110, y=current_y, w=80)
+    pdf.image_stream(st.session_state['stitched_img'], x=10, y=current_y, w = 80, type="PNG")
+    pdf.image_stream(st.session_state["pred"], x=110, y=current_y, w=80, type="PNG")
 
     current_y=pdf.get_y() + 10
     with io.BytesIO() as buf:
         f1.savefig(buf, format="PNG")
         hist_data=buf.getvalue()
-    pdf.image_stream(hist_data, x=10, y=current_y, w=80)
+    pdf.image_stream(hist_data, x=10, y=current_y, w=80, type="PNG")
     with io.BytesIO() as buf:
         f2.savefig(buf, format="PNG")
         heatmap_data = buf.getvalue()
-    pdf.image_stream(heatmap_data, x = 110, y=current_y, w=80)
+    pdf.image_stream(heatmap_data, x = 110, y=current_y, w=80, type="PNG")
     
     pdf_buffer = io.BytesIO()
     pdf.output(pdf_buffer, 'F')
