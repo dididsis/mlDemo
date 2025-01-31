@@ -9,6 +9,8 @@ import io
 import os
 import datetime
 
+from fpdf import FPDF
+
 import yaml
 from yaml.loader import SafeLoader
 
@@ -33,6 +35,36 @@ def load_config():
     with open(user_path, "r", encoding="utf-8") as file:
         config = yaml.load(file, Loader=SafeLoader)
     return config
+
+def create_pdf(n, d, l, f1, f2):
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial",size = 12)
+
+    pdf.cell(200, 10, txt=f"名称：{n}", ln=True, align='C')
+    pdf.cell(200, 10, txt=f"日時：{d}", ln=True, align='C')
+    pdf.cell(200, 10, txt=f"場所：{l}", ln=True, align='C')
+    current_y = pdf.get_y() + 5
+    pdf.image(st.session_state['stitched_img'], x=10, y=current_y, w = 80)
+    pdf.image(st.session_state["pred"], x=110, y=current_y, w=80)
+
+    current_y=pdf.get_y() + 10
+    with io.BytesIO() as buf:
+        f1.savefig(buf, format="PNG")
+        hist_data=buf.getvalue()
+    pdf.image(hist_data, x=10, y=current_y, w=80)
+    with io.BytesIO() as buf:
+        f2.savefig(buf, format="PNG")
+        heatmap_data = buf.getvalue()
+    pdf.image(heatmap_data, x = 110, y=current_y, w=80)
+
+    pdf_buffer = io.BytesIO()
+    pdf.output(pdf_buffer, 'F')
+
+    pdf_buffer.seek(0)
+
+    return pdf_buffer
+
 
 def save_config(config):
     with open(user_path, "w", encoding="utf-8") as file:
@@ -230,8 +262,18 @@ def main_app():
             with colr:
                 location=st.text_input("場所")
             st.write(1)
-            if st.button("保存"):
-                save(name,date,location)
+            colsave, coldown = st.columns(2)
+            with colsave:
+                if st.button("保存"):
+                    save(name,date,location)
+            with coldown:
+                pdf_data = create_pdf(name, date, location, fig, figg)
+                st.download_button(
+                    label="Download",
+                    data=pdf_data,
+                    file_name="test.pdf",
+                    mime="application/pdf"
+                )
 
 def main():
     st.set_page_config(layout="wide")
@@ -280,7 +322,7 @@ def main():
         
     else:
         st.write("---")
-        st.write("新規登録がまだの型はこちら:")
+        st.write("新規登録がまだの方はこちら:")
 
         if "show_signup" not in st.session_state:
             st.session_state["show_signup"] = False
