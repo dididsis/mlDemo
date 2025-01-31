@@ -38,8 +38,9 @@ def load_config():
 
 def create_pdf(n, d, l, f1, f2):
     pdf = FPDF()
+    pdf.add_font("GenShin", "", "GenShinGothic-Medium.ttf", uni=True)
     pdf.add_page()
-    pdf.set_font("Arial",size = 12)
+    pdf.set_font("GenShin",size = 12)
 
     pdf.cell(200, 10, txt=f"名称：{n}", ln=True, align='C')
     pdf.cell(200, 10, txt=f"日時：{d}", ln=True, align='C')
