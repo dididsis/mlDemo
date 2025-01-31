@@ -262,7 +262,7 @@ def main_app():
                 date=st.text_input("日時")
             with colr:
                 location=st.text_input("場所")
-            st.write(1)
+            st.write(dir(FPDF))
             colsave, coldown = st.columns(2)
             with colsave:
                 if st.button("保存"):
