@@ -8,7 +8,7 @@ def stitch_images(images, mode='homology'):
     for img in images:
         np_img=np.array(img)
         np_img_bgr=cv2.cvtColor(np_img, cv2.COLOR_RGB2BGR)
-        frames.append(np_img)
+        frames.append(np_img_bgr)
     
     if mode == 'panorama':
         stitcher = cv2.Stitcher_create(cv2.Stitcher_PANORAMA)
