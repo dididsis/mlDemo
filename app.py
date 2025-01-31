@@ -258,11 +258,8 @@ def main_app():
             with colr:
                 location=st.text_input("場所")
             st.write(fpdf.__version__)
-            colsave, coldown = st.columns(2)
-            with colsave:
-                if st.button("保存"):
-                    save(name,date,location)
-            with coldown:
+            if st.button("保存"):
+                save(name,date,location)
                 pdf_data = create_pdf(st.session_state['username'], name, date, location)
                 st.download_button(
                     label="Download",
