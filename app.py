@@ -268,6 +268,19 @@ def main_app():
                     mime="application/pdf"
                 )
 
+def chat():
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
+    
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+
+    if user_input := st.chat_input("reply"):
+        st.session_state.messages.append({"role":"user","content":user_input})
+        with st.chat_message("user"):
+            st.markdown(user_input)
+
 def main():
     st.set_page_config(layout="wide")
     st.title("ML Demo")
@@ -300,6 +313,8 @@ def main():
                 st.session_state['page']='inspect'
             if st.button("検査履歴"):
                 st.session_state['page']='history'
+            if st.button("チャット"):
+                st.session_state['page']='chat'
 
         if st.session_state['page'] is 'mypage':
             mypage()
@@ -307,6 +322,8 @@ def main():
             main_app()
         if st.session_state['page'] is 'detail':
             detail()
+        if st.session_state['page'] is 'chat':
+            chat()
         if st.session_state['page'] is 'history':
             #print(st.session_state)
             history(st.session_state['username'])
