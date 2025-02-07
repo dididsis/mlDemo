@@ -274,7 +274,28 @@ def chat():
     
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
-            st.markdown(message["content"])
+            if message.get("is_image", False):
+                st.image(message["content"])
+            else:
+                st.markdown(message["content"])
+
+    if not any(msg["role"] == "assistant" for msg in st.session_state.messages):
+        st.session_state.messages.append({
+            "role": "assistant",
+            "content": "画像をアップロードしてください",
+            "is_image": False
+        })
+        img_files =st.file_uploader(
+            "画像ファイルを選択",
+            type=["png", "jpg", "jpeg"],
+            accept_multiple_files=True
+        )
+        if img_files is not None:
+            st.session_state.messages.append({
+                "role":"user",
+                "content":img_files,
+                "is_image":True
+            })
 
     if user_input := st.chat_input("reply"):
         st.session_state.messages.append({"role":"user","content":user_input})
