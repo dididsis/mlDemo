@@ -278,14 +278,15 @@ def chat():
 
     if user_input := st.chat_input("reply"):
         st.session_state.messages.append({"role":"user","content":user_input})
-        with st.chat_message("user"):
-            st.markdown(user_input)
     
     response = f"Echo: {user_input}"
 
     st.session_state.messages.append({"role": "assistant", "content": response})
+    with st.chat_message("user"):
+        st.markdown(user_input)
     with st.chat_message("assistant"):
         st.markdown(response)
+    
 
 def main():
     st.set_page_config(layout="wide")
